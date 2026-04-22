@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "stm32f1xx_hal.h"
 #include "buzzer.h"
+#include "servo_control.h"
 
 void SystemClock_Config(void);
 void Error_Handler(void);
@@ -12,12 +13,21 @@ int main(void)
 
     /* 初始化蜂鸣器驱动 */
     Buzzer_Init();
+    
+    /* 初始化舵机驱动 (PA0 - TIM2_CH1) */
+    Servo_Init();
 
-    /* 蜂鸣器保持低电平触发 */
+    /* 舵机持续正转（中速） */
+    Servo_Forward(80);
+    
+    /* 蜂鸣器保持低电平触发 + 舵机保持正转 */
     while (1)
     {
         /* PB13保持低电平，蜂鸣器持续发声 */
         Buzzer_On();
+        
+        /* 舵机持续正转（PWM 信号由 TIM2 自动生成） */
+        HAL_Delay(100);  /* 延时 100ms */
     }
 
     return 0;
