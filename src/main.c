@@ -14,20 +14,24 @@ int main(void)
     /* 初始化蜂鸣器驱动 */
     Buzzer_Init();
     
-    /* 初始化舵机驱动 (PA0 - TIM2_CH1) */
-    Servo_Init();
-
-    /* 舵机持续正转（中速） */
-    Servo_Forward(80);
+    /* 设置蜂鸣器音量（0-100，0为静音，100为最大） */
+    Buzzer_SetVolume(1);  /* 设置为1%音量 */
     
-    /* 蜂鸣器保持低电平触发 + 舵机保持正转 */
+    // /* 初始化舵机驱动 (PA0 - TIM2_CH1) */
+    // Servo_Init();
+
+    // /* 舵机持续正转（中速） */
+    // Servo_Forward(80);
+    
+    /* 循环播放SOS信号 */
     while (1)
     {
-        /* PB13保持低电平，蜂鸣器持续发声 */
-        Buzzer_On();
+        /* 播放SOS信号，dit=150ms, gap=200ms */
+        Buzzer_SOS(150, 200);
         
         /* 舵机持续正转（PWM 信号由 TIM2 自动生成） */
-        HAL_Delay(100);  /* 延时 100ms */
+        /* SOS信号间隔后等待2秒再重复 */
+        HAL_Delay(2000);
     }
 
     return 0;
